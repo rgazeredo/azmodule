@@ -1,0 +1,22 @@
+{
+  "name": "azcode/azmodule",
+  "description": "Module generator for AZCode",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "AZCode\\AZModule\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "AZCode\\AZModule\\AZModuleServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^11.9"
+  }
+}
