@@ -1,8 +1,8 @@
 <?php
 
-namespace AZCode\AZModule;
+namespace AZCore\AZModule;
 
-use AZCode\AZModule\Console\Commands\AZModuleCommand;
+use AZCore\AZModule\Console\Commands\AZModuleCommand;
 use Illuminate\Support\ServiceProvider;
 
 class AZModuleServiceProvider extends ServiceProvider
