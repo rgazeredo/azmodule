@@ -1,11 +1,11 @@
 {
-  "name": "azcode/azmodule",
-  "description": "Module generator for AZCode",
+  "name": "azcore/azmodule",
+  "description": "Module generator of AZCore",
   "type": "library",
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "AZCode\\AZModule\\": "src/"
+      "AZCore\\AZModule\\": "src/"
     }
   },
   "require": {
@@ -15,7 +15,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "AZCode\\AZModule\\AZModuleServiceProvider"
+        "AZCore\\AZModule\\AZModuleServiceProvider"
       ]
     }
   }
