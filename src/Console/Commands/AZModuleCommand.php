@@ -1,6 +1,6 @@
 <?php
 
-namespace AZCode\AZModule\Console\Commands;
+namespace AZCore\AZModule\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
