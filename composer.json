@@ -8,15 +8,15 @@
       "AZCode\\AZModule\\": "src/"
     }
   },
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^11.9"
+  },
   "extra": {
     "laravel": {
       "providers": [
         "AZCode\\AZModule\\AZModuleServiceProvider"
       ]
     }
-  },
-  "require": {
-    "php": "^8.2",
-    "laravel/framework": "^11.9"
   }
 }
