@@ -2,6 +2,7 @@
 
 namespace AZCore\AZModule\Console\Commands;
 
+use App\Models\Menu;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
@@ -101,6 +102,14 @@ class AZModuleCommand extends Command
         $permission_delete = Permission::create(['name' => strtolower($moduleName) . '_delete']);
         $permission_delete->assignRole($role_admin);
 
+        // CREATE MENU
+        Menu::create([
+            'name' => $moduleName,
+            'url' => Str::of($moduleName)->lower()->plural(),
+            'active' => true,
+            'order' => Menu::max('order') + 1
+        ]);
+
         // CALL OPTIMIZE
         Artisan::call('optimize');
 
@@ -157,7 +166,7 @@ class AZModuleCommand extends Command
         }
 
         $viewName = strtolower($moduleName);
-        $serviceProviderContent = "<?php\n\nnamespace App\\Modules\\{$moduleName}\\Providers;\n\nuse Illuminate\\Support\\ServiceProvider;\nuse Illuminate\\Support\\Facades\\Route;\nuse Livewire\\Livewire;\n\nclass {$moduleName}ServiceProvider extends ServiceProvider\n{\n\n  public function boot()\n  {\n    \$this->loadViewsFrom(__DIR__ . '/../Resources/Views', '{$viewName}');\n    \$this->loadTranslationsFrom(__DIR__ . '/../Resources/Lang', 'core');\n    \$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');\n    Livewire::component('{$viewName}-livewire', 'App\\Modules\\{$moduleName}\\Livewire\\{$moduleName}Livewire');\n  }\n\n  public function register()\n  {\n    Route::middleware(['web', 'auth'])\n      ->namespace('App\\Modules\\{$moduleName}\\Livewire')\n      ->group(base_path('app/Modules/{$moduleName}/Routes/web.php'));\n\n    Route::prefix('api')\n      ->middleware(['api'])\n      ->namespace('App\\Modules\\{$moduleName}\\Livewire')\n      ->group(base_path('app/Modules/{$moduleName}/Routes/api.php'));\n  }\n}";
+        $serviceProviderContent = "<?php\n\nnamespace App\\Modules\\{$moduleName}\\Providers;\n\nuse Illuminate\\Support\\ServiceProvider;\nuse Illuminate\\Support\\Facades\\Route;\nuse Livewire\\Livewire;\n\nclass {$moduleName}ServiceProvider extends ServiceProvider\n{\n\n  public function boot()\n  {\n    \$this->loadViewsFrom(__DIR__ . '/../Resources/Views', '{$viewName}');\n    \$this->loadTranslationsFrom(__DIR__ . '/../Resources/Lang', '{$viewName}');\n    \$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');\n    Livewire::component('{$viewName}-livewire', 'App\\Modules\\{$moduleName}\\Livewire\\{$moduleName}Livewire');\n  }\n\n  public function register()\n  {\n    Route::middleware(['web', 'auth'])\n      ->namespace('App\\Modules\\{$moduleName}\\Livewire')\n      ->group(base_path('app/Modules/{$moduleName}/Routes/web.php'));\n\n    Route::prefix('api')\n      ->middleware(['api'])\n      ->namespace('App\\Modules\\{$moduleName}\\Livewire')\n      ->group(base_path('app/Modules/{$moduleName}/Routes/api.php'));\n  }\n}";
         File::put($serviceProviderPath, $serviceProviderContent);
 
         $this->info("Service provider '{$moduleName}ServiceProvider.php' created successfully!");
@@ -316,6 +325,8 @@ class AZModuleCommand extends Command
         Artisan::call('migrate:rollback', [
             '--path' => "app/Modules/{$moduleName}/Database/Migrations",
         ]);
+
+        Menu::where('url', Str::of($moduleName)->lower()->plural())->delete();
 
         // Delete the module directory
         File::deleteDirectory($modulePath);
